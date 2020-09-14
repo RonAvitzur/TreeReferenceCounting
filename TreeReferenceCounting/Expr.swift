@@ -23,7 +23,7 @@ final class Expr : Sequence {
         return parent.args.firstIndex(where: {self === $0})! // self must be in parent.args. ok to crash if untrue
     }
 
-    var leftMost: Expr { args.first?.leftMost ?? self }
+    var leftMost: Expr { numberOfArgs == 0 ? self : args[0].leftMost }
     var nextBottomUp: Expr? {
         guard let parent = parent else      { return nil }
         if opnum == parent.numberOfArgs - 1 { return parent }
@@ -55,7 +55,7 @@ final class Expr : Sequence {
 
 // another iterator to walk nodes in top down order
 extension Expr {
-    var rightMost: Expr { args.last?.rightMost ?? self }
+    var rightMost: Expr { numberOfArgs == 0 ? self : args[numberOfArgs - 1].rightMost }
     var nextTopDown: Expr? { numberOfArgs == 0 ? nextOperand : args[0] }
     var nextOperand: Expr? {
         var expr = self
